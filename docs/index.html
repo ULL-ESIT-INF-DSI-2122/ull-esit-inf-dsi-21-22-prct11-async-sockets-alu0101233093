@@ -1,0 +1,324 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>p11</title><meta name="description" content="Documentation for p11"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">p11</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1> p11 </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#práctica-11---cliente-y-servidor-para-una-aplicación-de-procesamiento-de-notas-de-texto" id="práctica-11---cliente-y-servidor-para-una-aplicación-de-procesamiento-de-notas-de-texto" style="color: inherit; text-decoration: none;">
+  <h1>Práctica 11 - Cliente y servidor para una aplicación de procesamiento de notas de texto</h1>
+</a>
+<p><strong>Asignatura:</strong> Desarrollo de sistemas informáticos<br><strong>Nombre:</strong> Leonardo Alfonso Cruz Rodríguez 
+<strong>Correo:</strong> <a href="mailto:alu0101233093@ull.edu.es">alu0101233093@ull.edu.es</a></p>
+<p><a href="https://coveralls.io/github/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093?branch=master"><img src="https://coveralls.io/repos/github/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://sonarcloud.io/summary/new_code?id=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093"><img src="https://sonarcloud.io/api/project_badges/measure?project=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093&metric=alert_status" alt="Quality Gate Status"></a></p>
+
+<a href="#índice" id="índice" style="color: inherit; text-decoration: none;">
+  <h2>Índice</h2>
+</a>
+<ul>
+<li><a href="#id0">Creación del directorio de trabajo y tareas previas</a></li>
+<li><a href="#id0.1">Debugger TypeScript en VSC</a></li>
+<li><a href="#id0.2">Mocha y Chai - Programación TDD</a></li>
+<li><a href="#id0.3">Documentación con TypeDoc</a></li>
+<li><a href="#id0.4">Cubrimiento de código utilizando Instanbul y Coveralls</a></li>
+<li><a href="#id0.5">Integración continua de código fuente TypeScript a través de GitHub Action</a></li>
+<li><a href="#id0.6">Calidad y seguridad del código fuente mediante Sonar Cloud</a></li>
+<li><a href="#id1">Uso de yargs</a></li>
+<li><a href="#id2">Funciones de gestión de notas</a></li>
+</ul>
+
+<a href="#creación-del-directorio-de-trabajo-y-tareas-previas" id="creación-del-directorio-de-trabajo-y-tareas-previas" style="color: inherit; text-decoration: none;">
+  <h2>Creación del directorio de trabajo y tareas previas<a name="id0"></a></h2>
+</a>
+<p>Antes de empezar el proyecto es necesario instalar diversos paquetes para tener una estructura de directorios adecuada. Para ello el primer paso es crear el directorio principal:</p>
+<pre><code class="language-bash"><span class="hl-0">$mkdir</span><span class="hl-1"> P11</span><br/><span class="hl-0">$cd</span><span class="hl-1"> P11 /</span>
+</code></pre>
+<p>Una vez dentro, ejecutaremos los siguientes comandos:</p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> init --yes</span><br/><span class="hl-0">$npm</span><span class="hl-1"> install -D eslint eslint-config-google @typescript-eslint/eslint-plugin @typescript-eslint/parser</span><br/><span class="hl-0">$tsc</span><span class="hl-1"> --init</span><br/><span class="hl-0">$mkdir</span><span class="hl-1"> src</span><br/><span class="hl-0">$mkdir</span><span class="hl-1"> tests</span><br/><span class="hl-0">$touch</span><span class="hl-1"> README.md</span>
+</code></pre>
+<p>Tras ejecutarlos habremos inicializado el Node Project Manager con la herramienta Eslint y el compilador de TypeScript. Además de crear los directorios donde estará almacenado el código y el fichero <code>README.md</code>.  </p>
+<p>El siguiente paso es configurar el fichero <code>tsconfig.json</code> descomentando las siguientes lineas dentro del fichero:</p>
+<ul>
+<li><code>rootDirs</code> se debe indicar el directorio <code>src</code> para almacenar el código principal, la carpeta <code>tests</code> será para almacenar las pruebas a la hora de programar en TDD.  <pre><code class="language-json"><span class="hl-2">&quot;rootDirs&quot;</span><span class="hl-1">: [</span><span class="hl-2">&quot;./src&quot;</span><span class="hl-1">,</span><span class="hl-2">&quot;./tests&quot;</span><span class="hl-1">]</span>
+</code></pre>
+</li>
+<li><code>declaration</code> se requerirá para usar el debugger.  <pre><code class="language-json"><span class="hl-2">&quot;declaration&quot;</span><span class="hl-1">: </span><span class="hl-3">true</span>
+</code></pre>
+</li>
+<li><code>sourceMap</code> se necesita cuando se exportan funciones.  <pre><code class="language-json"><span class="hl-2">&quot;sourceMap&quot;</span><span class="hl-1">: </span><span class="hl-3">true</span>
+</code></pre>
+</li>
+<li><code>outDir</code> para almacenar los archivos compilados en un directorio concreto.  <pre><code class="language-json"><span class="hl-2">&quot;outDir&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;./dist&quot;</span>
+</code></pre>
+</li>
+</ul>
+<p>Por último, faltaría iniciar el directorio git. Pero antes, crearemos el fichero <code>.gitignore</code> para evitar que git tenga en seguimiento lo que introduzcamos en dicho archivo.</p>
+<pre><code class="language-bash"><span class="hl-0">$touch</span><span class="hl-1"> .gitignore</span><br/><span class="hl-0">$cat</span><span class="hl-1"> .gitignore</span><br/><span class="hl-1">node_modules/</span><br/><span class="hl-1">dist/</span><br/><span class="hl-1">package-lock.json</span><br/><span class="hl-1">.vscode/</span>
+</code></pre>
+<p>Ahora si, y para finalizar, iniciaremos el repositorio git y añadiremos el remoto:</p>
+<pre><code class="language-bash"><span class="hl-0">$git</span><span class="hl-1"> init</span><br/><span class="hl-0">$git</span><span class="hl-1"> remote add origin git@github.com:ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093.git   </span>
+</code></pre>
+
+<a href="#debugger-typescript-en-vsc" id="debugger-typescript-en-vsc" style="color: inherit; text-decoration: none;">
+  <h2>Debugger TypeScript en VSC<a name="id0.1"></a></h2>
+</a>
+<p>Para utilizar el debugger en nuestro proyecto pincharemos en el icono de la barra situada a la izquierda:  </p>
+<p><img src="https://user-images.githubusercontent.com/72469549/156930570-8ada3bf7-a9b6-4ff4-acb3-77925e9298d6.png" alt="image"></p>
+<p>A continuación pinchamos en <code>cree un archivo launch.json</code> y se abrirá el siguiente menu desplegable:</p>
+<p><img src="https://user-images.githubusercontent.com/72469549/156930748-8ce798ba-fa91-4f74-a026-1cb969c18514.png" alt="image"></p>
+<p>Seleccionaremos <code>Node.js</code> y se abrirá el fichero <code>launch.json</code>. En él solo habrá que cambiar la dirección de <code>outFiles</code>, quedaría de la siguiente manera:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;0.2.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;configurations&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">        {</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;type&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;pwa-node&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;request&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;launch&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;Launch Program&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;skipFiles&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">                </span><span class="hl-2">&quot;&lt;node_internals&gt;/**&quot;</span><br/><span class="hl-1">            ],</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;program&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;${workspaceFolder}/src/ejemplo.ts&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-4">&quot;outFiles&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">                </span><span class="hl-2">&quot;${workspaceFolder}/dist/**/*.js&quot;</span><br/><span class="hl-1">            ]</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    ]</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Para debuggear un archivo, debe compilarse previamente y darle al botón verde en la parte superior.  </p>
+<p><img src="https://user-images.githubusercontent.com/72469549/156931099-b62aecbb-80c9-441f-96dd-493d35cf9052.png" alt="image"></p>
+
+<a href="#mocha-y-chai---programación-tdd" id="mocha-y-chai---programación-tdd" style="color: inherit; text-decoration: none;">
+  <h2>Mocha y Chai - Programación TDD<a name="id0.2"></a></h2>
+</a>
+<p>Para seguir el paradigma de programación dirigido por pruebas (TDD) instalaremos los paquetes Mocha y Chai, las pruebas se almacenarán en el directorio <code>./tests</code>.  </p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> install -D mocha chai @types/mocha @types/chai ts-node</span>
+</code></pre>
+<p>A continuación crearemos el fichero <code>.mocharc.json</code> para configurar Mocha con el siguiente contenido.</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;extension&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">        </span><span class="hl-2">&quot;ts&quot;</span><br/><span class="hl-1">    ],</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;spec&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;tests/*.spec.ts&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;require&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ts-node/register&quot;</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Por último, dentro del archivo <code>package.json</code>, cambiaremos la opción de test por Mocha. Quedaría de la siguiente manera:  </p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;testingproyect&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;1.0.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;description&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;index.js&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;scripts&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;test&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;mocha&quot;</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;keywords&quot;</span><span class="hl-1">: [],</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;author&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;license&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ISC&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;devDependencies&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.1.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.6&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.2.1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;ts-node&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^10.7.0&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Ahora solo faltaría crear los tests con la extensión <code>.spec.ts</code> dentro de la carpeta <code>tests</code>, y ejecutarlos con el siguiente comando:</p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> </span><span class="hl-5">test</span>
+</code></pre>
+
+<a href="#documentación-con-typedoc" id="documentación-con-typedoc" style="color: inherit; text-decoration: none;">
+  <h2>Documentación con TypeDoc<a name="id0.3"></a></h2>
+</a>
+<p>El primer paso para realizar la documentación con la herramienta <code>TypeDoc</code> sería instalar la librería correspondiente:</p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> install -D typedoc</span>
+</code></pre>
+<p>A continuación se debe crear el archivo <code>typedoc.json</code> para escribir la configuración con los parámetros necesarios, el contenido del fichero quedaría como se ve a continuación:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;entryPoints&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">        </span><span class="hl-2">&quot;./src/ejemplo-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-2">&quot;./src/ejemplo-2&quot;</span><br/><span class="hl-1">    ],</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;out&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;./docs&quot;</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Cabe destacar que en el parámetro <code>entryPoints</code> deben ir los ficheros que se van a documentar uno por uno.<br>El paso siguiente sería escribir la documentación en nuestro código. Para ello debemos escribir <code>/**</code> encima de una función y nos aparecerá lo siguiente:  </p>
+<p><img src="https://user-images.githubusercontent.com/72469549/157311335-0db0a914-62f8-4cd4-b4da-18b6d01a6f03.png" alt="image_2022-03-08_19-23-34"></p>
+<p>Teclearemos enter y se nos generará automáticamente una plantilla por defecto para escribir la documentación a cerca de la función.</p>
+<p><img src="https://user-images.githubusercontent.com/72469549/157311857-05a84b71-e88b-4816-adb3-f05ca75f08fb.png" alt="image"></p>
+<p>El siguiente paso sería rellenarla, por ejemplo de la siguiente manera:</p>
+<pre><code class="language-typescript"><span class="hl-6">/**</span><br/><span class="hl-6"> * Saluda al mundo un número de veces determinado</span><br/><span class="hl-6"> * </span><span class="hl-3">@param</span><span class="hl-6"> </span><span class="hl-0">veces</span><span class="hl-6"> Almacena el número de veces que se saludará</span><br/><span class="hl-6"> * </span><span class="hl-3">@returns</span><span class="hl-6"> La cadena con los saludos concatenados</span><br/><span class="hl-6"> */</span><br/><span class="hl-3">function</span><span class="hl-1"> </span><span class="hl-5">hello</span><span class="hl-1">(</span><span class="hl-0">veces</span><span class="hl-1">: </span><span class="hl-7">number</span><span class="hl-1">): </span><span class="hl-7">string</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-0">hi</span><span class="hl-1"> = </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-8">for</span><span class="hl-1">(</span><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-9">0</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> &lt; </span><span class="hl-0">veces</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1">++)</span><br/><span class="hl-1">        </span><span class="hl-0">hi</span><span class="hl-1"> += </span><span class="hl-2">&quot;¡Hello world! &quot;</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-8">return</span><span class="hl-1"> </span><span class="hl-0">hi</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Por último, debemos añadir al fichero <code>package.json</code> un parámetro que nos permitirá ejecutar la documentación con el comando <code>npm run doc</code> y se guardaría en <code>./docs</code>.<br>El fichero quedaría de la siguiente manera:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;p4&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;1.0.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;description&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;index.js&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;scripts&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;test&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;mocha&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;doc&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;typedoc&quot;</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;keywords&quot;</span><span class="hl-1">: [],</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;author&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;license&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ISC&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;devDependencies&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.1.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.6&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.2.1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;ts-node&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^10.7.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;typedoc&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^0.22.13&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#cubrimiento-de-código-utilizando-instanbul-y-coveralls" id="cubrimiento-de-código-utilizando-instanbul-y-coveralls" style="color: inherit; text-decoration: none;">
+  <h2>Cubrimiento de código utilizando Instanbul y Coveralls<a name="id0.4"></a></h2>
+</a>
+<p>Primero instalaremos los paquetes y dependencias necesarios para usar la herramientas:</p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> install -D nyc coveralls</span>
+</code></pre>
+<p>A continuación, añadiremos en el fichero <code>package.json</code> un script para realizar el cubrimiento de código. <code>&quot;coverage&quot;: &quot;nyc npm test &amp;&amp; nyc report --reporter=lcov&quot;</code>.
+El fichero quedaría de la siguiente manera:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;p4&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;1.0.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;description&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;index.js&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;scripts&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;test&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;mocha&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;doc&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;typedoc&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;coverage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;nyc npm test &amp;&amp; nyc report --reporter=lcov&quot;</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;keywords&quot;</span><span class="hl-1">: [],</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;author&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;license&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ISC&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">&quot;devDependencies&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;@types/mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.1.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;chai&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^4.3.6&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;mocha&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^9.2.1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;ts-node&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^10.7.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;typedoc&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;^0.22.13&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Para ejecutar este script simplemente introducimos por consola:</p>
+<pre><code class="language-bash"><span class="hl-0">$npm</span><span class="hl-1"> run coverage</span>
+</code></pre>
+<p>A continuación debemos entrar a la página web <a href = "http://www.coveralls.io/">coveralls.io</a> y habilitaremos el cubrimiento de código en nuestro proyecto.
+(El proyecto debe estar en público para el uso de coveralls.io gratuito).</p>
+<p>Ahora cuando ejecutemos por consola <code>npm run coverage</code> en la página del repositorio en <code>Coveralls</code> se nos mostrará la información del cubrimiento del código.
+Para añadir el <code>Batch</code> del cubrimiento al <code>README.md</code> se copiará directamente de la página y se pegará en el fichero.</p>
+
+<a href="#integración-continua-de-código-fuente-typescript-a-través-de-github-action" id="integración-continua-de-código-fuente-typescript-a-través-de-github-action" style="color: inherit; text-decoration: none;">
+  <h2>Integración continua de código fuente TypeScript a través de GitHub Action<a name="id0.5"></a></h2>
+</a>
+<p>Antes de empezar, es importante hacer commit y push al repositorio remoto de lo que hemos hecho hasta el momento si deseamos añadir github actions desde la propia página
+de github. Tambien es posible crear la carpeta con el contenido deseado e ignorar lo anteriormente mencionado.</p>
+<p>Teniendo en cuenta lo anterior, el primer paso es instalar el paquete TypeScript:</p>
+<pre><code><span class="hl-0">$npm</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> -</span><span class="hl-10">D</span><span class="hl-1"> </span><span class="hl-0">typescript</span>
+</code></pre>
+<p>Una vez instalado, entraremos a la página del repositorio y nos dirigiremos a Actions, y dentro de dicho apartado bajaremos hasta Continuous integration.
+<img src="https://user-images.githubusercontent.com/72469549/160702017-d769658d-cfc4-4ecc-a0d5-ca4caa187c8f.png" alt="image">  </p>
+<p>Buscaremos <code>Node.js</code> y le daremos a <code>Set up this workflow</code>.</p>
+<p><img src="https://user-images.githubusercontent.com/72469549/160702039-bf36ceec-f903-4155-8450-32a70b19f276.png" alt="image">  </p>
+<p>Una vez dentro es importante cambiar el final del fichero por el siguiente contenido:</p>
+<pre><code><span class="hl-11">steps</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-11">uses</span><span class="hl-1">: </span><span class="hl-0">actions</span><span class="hl-1">/</span><span class="hl-0">checkout</span><span class="hl-1">@</span><span class="hl-0">v2</span><br/><span class="hl-1">    - </span><span class="hl-11">name</span><span class="hl-1">: </span><span class="hl-0">Use</span><span class="hl-1"> </span><span class="hl-0">Node</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">$</span><span class="hl-1">{{ </span><span class="hl-0">matrix</span><span class="hl-1">.</span><span class="hl-0">node</span><span class="hl-1">-</span><span class="hl-0">version</span><span class="hl-1"> }}</span><br/><span class="hl-1">      </span><span class="hl-11">uses</span><span class="hl-1">: </span><span class="hl-0">actions</span><span class="hl-1">/</span><span class="hl-0">setup</span><span class="hl-1">-</span><span class="hl-0">node</span><span class="hl-1">@</span><span class="hl-0">v2</span><br/><span class="hl-1">      </span><span class="hl-8">with</span><span class="hl-1">:</span><br/><span class="hl-1">        </span><span class="hl-0">node</span><span class="hl-1">-</span><span class="hl-11">version</span><span class="hl-1">: </span><span class="hl-0">$</span><span class="hl-1">{{ </span><span class="hl-0">matrix</span><span class="hl-1">.</span><span class="hl-0">node</span><span class="hl-1">-</span><span class="hl-0">version</span><span class="hl-1"> }}</span><br/><span class="hl-1">    - </span><span class="hl-11">run</span><span class="hl-1">: </span><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">install</span><br/><span class="hl-1">    - </span><span class="hl-11">run</span><span class="hl-1">: </span><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">test</span>
+</code></pre>
+<p>Y realizamos un commit para guardar el fichero generado. Opcionalmente se puede añadir un <code>badge</code> en al informe en las siguientes opciones:</p>
+<p><img src="https://user-images.githubusercontent.com/72469549/160701932-68d8d9b2-d347-49eb-90c7-76736f17073f.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/72469549/160701954-2845ea6d-4a1e-4aaf-88c6-31a35a0ee546.png" alt="image"></p>
+<p>A continuación crearemos el fichero <code>coveralls.yml</code> y le pondremos el siguiente contenido:</p>
+<pre><code class="language-yml">name: Coveralls
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Cloning repo
+      uses: actions/checkout@v2
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+    - name: Installing dependencies
+      run: npm install
+    - name: Generating coverage information
+      run: npm run coverage
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+</code></pre>
+<p>Ahora con cada push se comprobarán los tests y el recubrimiento de código automáticamente y se podrá revisar en Github Actions.</p>
+
+<a href="#calidad-y-seguridad-del-código-fuente-mediante-sonar-cloud-y-github-actions" id="calidad-y-seguridad-del-código-fuente-mediante-sonar-cloud-y-github-actions" style="color: inherit; text-decoration: none;">
+  <h2>Calidad y seguridad del código fuente mediante Sonar Cloud y GitHub Actions<a name="id0.6"></a></h2>
+</a>
+<p>Para poder utilizar la herramienta <code>Sonar Cloud</code> debemos tener el repositorio en una organización. En este caso lo tendremos alojado en la organización de la asignatura.
+Una vez creada la cuenta en la página <a href = "http://www.sonarcloud.io/">sonarcloud.io</a> añadiremos el repositorio dándole al símbolo <code>+</code>. Veremos que nos analizará 
+el proyecto.</p>
+<p>A continuación, deberemos ir al apartado <code>administration</code> y en el desplegable seleccionaremos <code>analysis method</code> y desactivaremos el análisis automático.
+El siguiente paso sería entrar en el tutorial de github actions, copiaremos el <code>SONAR_TOKEN</code>, accedemos al apartado settings del repositorio, entramos en secrets,
+dentro le daremos a actions y añadiremos un nuevo secreto con el título y el valor que nos ha dado la <code>Sonar Cloud</code>.</p>
+<p>Una vez añadido el secreto, en la página de <code>Sonar Cloud</code> le daremos a <code>continue</code>. Seleccionaremos <em>Other</em> ya que este proyecto está programado en TS y nos mostrará el 
+contenido que deberá tener el fichero de flujo de trabajo en github actions. Por lo tanto, el siguiente paso sería crear el fichero <code>sonarcloud.yml</code> dentro del directorio
+<code>.github/workflows</code> y copiaremos el contenido dado por la página. Es necesario cambiar un poco el archivo y añadir pasos, el fichero quedaría de la siguiente manera:</p>
+<pre><code class="language-yml">name: Sonar-Cloud 
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - name: Installing dependencies
+        run: npm install
+      - name: Generating coverage report
+        run: npm run coverage
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+</code></pre>
+<p>El paso siguiente sería crear el fichero <code>sonar-project.properties</code> y pegar el contenido dado por la página. Modificandolo un poco quedaría de la siguiente manera:</p>
+<pre><code class="language-properties">sonar.projectKey=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093
+sonar.organization=ull-esit-inf-dsi-2122
+
+# This is the name and version displayed in the SonarCloud UI.
+sonar.projectName=ull-esit-inf-dsi-21-22-prct11-async-sockets-alu0101233093
+sonar.projectVersion=1.0
+
+# Path is relative to the sonar-project.properties file. Replace &quot;\&quot; by &quot;/&quot; on Windows.
+sonar.sources=src
+
+# Encoding of the source code. Default is default system encoding
+sonar.sourceEncoding=UTF-8
+
+# Coverage info
+sonar.javascript.lcov.reportPath=coverage/lcov.info
+</code></pre>
+<p>Y ya estaría configurada la <code>Gihub Actions</code> de <code>Sonar Cloud</code>. Por último, para añadir el badge a la documentación del proyecto, nos dirigiremos al apartado de información
+abajo a la izquierda y copiaremos el badge.</p>
+
+<a href="#uso-de-yargs" id="uso-de-yargs" style="color: inherit; text-decoration: none;">
+  <h2>Uso de yargs<a name="id1"></a></h2>
+</a>
+<p>Para la utilización del programa se utilizará el paquete <code>yargs</code>, que permite introducir argumentos por linea de comandos.</p>
+<p>La estructura principal de un comando es la siguiente:  </p>
+<pre><code class="language-typescript"><span class="hl-0">yargs</span><span class="hl-1">.</span><span class="hl-5">command</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-0">command:</span><span class="hl-1"> </span><span class="hl-2">&#39;comando&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">describe:</span><span class="hl-1"> </span><span class="hl-2">&#39;ejecuta un comando&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">builder:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-0">arg1:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-0">describe:</span><span class="hl-1"> </span><span class="hl-2">&#39;primer argumento&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">demandOption:</span><span class="hl-1"> </span><span class="hl-3">true</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">type:</span><span class="hl-1"> </span><span class="hl-2">&#39;string&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">      </span><span class="hl-0">title:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-0">describe:</span><span class="hl-1"> </span><span class="hl-2">&#39;segundo argumento&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">demandOption:</span><span class="hl-1"> </span><span class="hl-3">true</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">type:</span><span class="hl-1"> </span><span class="hl-2">&#39;string&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      }</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-5">handler</span><span class="hl-1">(</span><span class="hl-0">argv</span><span class="hl-1">) {</span><br/><span class="hl-1">      </span><span class="hl-8">if</span><span class="hl-1">(</span><span class="hl-3">typeof</span><span class="hl-1"> </span><span class="hl-0">argv</span><span class="hl-1">.</span><span class="hl-0">arg1</span><span class="hl-1"> === </span><span class="hl-2">&#39;string&#39;</span><span class="hl-1"> &amp;&amp; </span><span class="hl-3">typeof</span><span class="hl-1"> </span><span class="hl-0">argv</span><span class="hl-1">.</span><span class="hl-0">arg2</span><span class="hl-1"> === </span><span class="hl-2">&#39;string&#39;</span><span class="hl-1">)</span><br/><span class="hl-1">        </span><span class="hl-6">// función</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>De tal manera que para usar el comando anterior se escribiría lo siguiente por consola:</p>
+<pre><code class="language-bash"><span class="hl-1">node dist/src/index.js comando --arg1=argumento1 --arg2=argumento2</span>
+</code></pre>
+<p>Para utilizar las funciones de este ejercicio se ejecutará siempre el archivo <code>dist/src/index.js</code> con el comando que se desee ejecutar, dicho comando llamará
+a la función deseada y ejecutará el código de la misma.</p>
+
+<a href="#funciones-de-gestión-de-notas" id="funciones-de-gestión-de-notas" style="color: inherit; text-decoration: none;">
+  <h2>Funciones de gestión de notas<a name="id2"></a></h2>
+</a>
+
+<a href="#función-addnote" id="función-addnote" style="color: inherit; text-decoration: none;">
+  <h3>Función addNote()</h3>
+</a>
+<p>Para añadir una nota, obligatoriamente se debe pasar por parámetro el <code>user</code> (escritor), <code>title</code> (título),
+<code>color</code> (color) y <code>body</code> (contenido).</p>
+<p>Si el usuario está registrado se añade la nota a su directorio previamente creado.
+En caso contrario se crea el directorio y se añade la nota.
+Al final, la función devolverá una cadena indicando si se añadió la nota correctamente.</p>
+<p>Ejemplo de uso:</p>
+<pre><code><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-0">dist</span><span class="hl-1">/</span><span class="hl-0">src</span><span class="hl-1">/</span><span class="hl-0">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">add</span><span class="hl-1"> --</span><span class="hl-0">user</span><span class="hl-1">=</span><span class="hl-2">&quot;edusegre&quot;</span><span class="hl-1"> --</span><span class="hl-0">title</span><span class="hl-1">=</span><span class="hl-2">&quot;Red note&quot;</span><span class="hl-1"> --</span><span class="hl-0">body</span><span class="hl-1">=</span><span class="hl-2">&quot;This is a red note&quot;</span><span class="hl-1"> --</span><span class="hl-0">color</span><span class="hl-1">=</span><span class="hl-2">&quot;red&quot;</span>
+</code></pre>
+
+<a href="#función-listnotes" id="función-listnotes" style="color: inherit; text-decoration: none;">
+  <h3>Función listNotes()</h3>
+</a>
+<p>Para listar las notas de un usuario, evidentemente, se pedirá obligatoriamente el nombre del usuario.
+Si el usuario existe se almacenará en <code>result</code> las notas que tienen quitandoles la extensión <code>.json</code> y se devolverá dicha variable.
+Al final la función devolverá <code>result</code> si se logró encontrar al usuario, en caso contrario, se devolverá un mensaje de error.</p>
+<p>Ejemplo de uso:</p>
+<pre><code><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-0">dist</span><span class="hl-1">/</span><span class="hl-0">src</span><span class="hl-1">/</span><span class="hl-0">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">list</span><span class="hl-1"> --</span><span class="hl-0">user</span><span class="hl-1">=</span><span class="hl-2">&quot;edusegre&quot;</span>
+</code></pre>
+
+<a href="#función-modifynote" id="función-modifynote" style="color: inherit; text-decoration: none;">
+  <h3>Función modifyNote()</h3>
+</a>
+<p>Para modificar una nota, obligatoriamente se debe pasar por parámetro el <code>user</code> (escritor), <code>title</code> (título),
+<code>color</code> (color al que se desea cambiar) y <code>body</code> (contenido por el que se desea cambiar).</p>
+<p>Si la nota existe se cambiará el contenido y se devolverá un mensaje informativo. En caso contrario devolverá un mensaje de error.</p>
+<p>Ejemplo de uso:</p>
+<pre><code><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-0">dist</span><span class="hl-1">/</span><span class="hl-0">src</span><span class="hl-1">/</span><span class="hl-0">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">add</span><span class="hl-1"> --</span><span class="hl-0">user</span><span class="hl-1">=</span><span class="hl-2">&quot;edusegre&quot;</span><span class="hl-1"> --</span><span class="hl-0">title</span><span class="hl-1">=</span><span class="hl-2">&quot;Yellow note&quot;</span><span class="hl-1"> --</span><span class="hl-0">body</span><span class="hl-1">=</span><span class="hl-2">&quot;This is a yellow note&quot;</span><span class="hl-1"> </span>
+</code></pre>
+
+<a href="#función-readnote" id="función-readnote" style="color: inherit; text-decoration: none;">
+  <h3>Función readNote()</h3>
+</a>
+<p>Para leer una nota, obligatoriamente se debe pasar por parámetro el <code>user</code> (escritor) y el <code>title</code> (título).</p>
+<p>Si existe el usuario indicado con la nota especificada se llamará a la función <code>printcolor()</code> para que formatee el texto en base al color de la nota. Una vez formateado se devolverá el título
+y el contenido de la nota.</p>
+<p>En caso contrario se devolverá un mensaje de error indicando que no existe la nota.</p>
+<p>Ejemplo de uso:</p>
+<pre><code><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-0">dist</span><span class="hl-1">/</span><span class="hl-0">src</span><span class="hl-1">/</span><span class="hl-0">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">read</span><span class="hl-1"> --</span><span class="hl-0">user</span><span class="hl-1">=</span><span class="hl-2">&quot;edusegre&quot;</span><span class="hl-1"> --</span><span class="hl-0">title</span><span class="hl-1">=</span><span class="hl-2">&quot;Yellow note&quot;</span>
+</code></pre>
+
+<a href="#función-removenote" id="función-removenote" style="color: inherit; text-decoration: none;">
+  <h3>Función removeNote()</h3>
+</a>
+<p>Para borrar una nota, obligatoriamente se debe pasar por parámetro el <code>user</code> (escritor) y el <code>title</code> (título).</p>
+<p>Si existe el usuario indicado con la nota especificada se eliminará la nota. Si el directorio del usuario quede vacío, se eliminará la carpeta para ahorrar espacio y se devolverá un mensaje
+informativo.</p>
+<p>En caso de que no se encuentre la nota o no exista el usuario se devolverá un mensaje de error indicando que no se pudo encontrar.</p>
+<p>Ejemplo de uso:</p>
+<pre><code><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-0">dist</span><span class="hl-1">/</span><span class="hl-0">src</span><span class="hl-1">/</span><span class="hl-0">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1"> </span><span class="hl-0">remove</span><span class="hl-1"> --</span><span class="hl-0">user</span><span class="hl-1">=</span><span class="hl-2">&quot;edusegre&quot;</span><span class="hl-1"> --</span><span class="hl-0">title</span><span class="hl-1">=</span><span class="hl-2">&quot;Yellow note&quot;</span>
+</code></pre>
+
+<a href="#cliente" id="cliente" style="color: inherit; text-decoration: none;">
+  <h2>Cliente<a name="id3"></a></h2>
+</a>
+<p>La clase cliente es una clase sencilla que almacena el <code>puerto</code> al que el cliente desea conectarse, el <code>nombre de usuario</code> con el que identificarse y el <code>comando</code> que
+desea enviar al servidor.</p>
+<p>Dispone de dos métodos setters (para el comando y el nombre de usuario) y un método <code>execute()</code>, que permite realizar la conexión con el servidor.</p>
+<p>El archivo <code>client-index.ts</code> es el que el cliente debe ejecutar para conectarse al sevidor, dada la implementación del mismo, el objeto <code>c</code> de tipo cliente siempre
+tendrá los datos necesarios para realizar la conexión con el servidor.</p>
+
+<a href="#servidor" id="servidor" style="color: inherit; text-decoration: none;">
+  <h2>Servidor<a name="id4"></a></h2>
+</a>
+<p>El servidor, al igual que el cliente, se almacena en una clase. Esta clase tiene únicamente como atributo el <code>puerto</code> de acceso y el método <code>start()</code> para iniciar
+el servidor.</p>
+<p>Para iniciar el servidor se debe ejecutar el archivo <code>servidor.ts</code> que además de contener la definición de la clase crea un servidor y lo inicia. El servidor se 
+mantendrá abierto indefinidamente a menos que se pare la ejecución del proceso mediante el comando <code>Ctrl + C</code>.</p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Modules</a></li><li class=" tsd-kind-module"><a href="modules/cliente.html">cliente</a></li><li class=" tsd-kind-module"><a href="modules/funciones_addNote.html">funciones/add<wbr/>Note</a></li><li class=" tsd-kind-module"><a href="modules/funciones_listNotes.html">funciones/list<wbr/>Notes</a></li><li class=" tsd-kind-module"><a href="modules/funciones_modifyNote.html">funciones/modify<wbr/>Note</a></li><li class=" tsd-kind-module"><a href="modules/funciones_readNote.html">funciones/read<wbr/>Note</a></li><li class=" tsd-kind-module"><a href="modules/funciones_removeNote.html">funciones/remove<wbr/>Note</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
